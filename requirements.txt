@@ -1,0 +1,8 @@
+numpy
+PIL
+netCDF4
+scipy
+pandas
+tqdm
+tensorflow>=2.6.0
+matplotlib

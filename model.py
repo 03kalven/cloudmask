@@ -6,7 +6,7 @@ from tensorflow.keras import backend as keras
 
 def get_model(w):
     """
-    Returns the cloudMask model for a given width w. Works for 668x668x3 inputs. This input size was chosen because it minimized the overlap needed during the subdividing process as compared to similar input sizes.
+    Returns the cloudmask model for a given width w. Works for 668x668x3 inputs. This input size was chosen because it minimized the overlap needed during the subdividing process as compared to similar input sizes. Inspiration from https://github.com/zhixuhao/unet.
 
     Parameters:
     w -- width of the first convolutions in the model
@@ -178,7 +178,7 @@ def static_weighted_binary_crossentropy(true, pred, weight_zero=0.03693):
     Parameters:
     true -- the true value tensor
     pred -- the prediction value tensor
-    weight_zero -- a scalar to weight predictions on zero pixels. Helpful to keep < 1 in unbalanced datasets (like this one) where a zero prediction is much more common than a one (default 0.03688)
+    weight_zero -- a scalar to weight predictions on zero pixels. Helpful to keep < 1 in unbalanced datasets (like this one) where a zero prediction is much more common than a one (default 0.03693)
     """
     true = tf.cast(true, tf.float32)
     pred = tf.cast(pred, tf.float32)

@@ -103,7 +103,7 @@ def bound_to_pixel(bound, size=1801, ax="lat"):
     Parameters:
     bound -- latitude or longitude value, in degrees,
     size --  pixels along the goven axis (default 1801)
-    ax -- latitude ('lat') or longitude ('lon')
+    ax -- latitude ("lat") or longitude ("lon")
     """
     if ax == "lat":
         deg = 180
@@ -124,7 +124,7 @@ def pixel_to_bound(pix, size=1801, ax="lat"):
     Parameters:
     bound -- latitude or longitude value, in degrees,
     size --  pixels along the goven axis (default 1801)
-    ax -- latitude ('lat') or longitude ('lon')
+    ax -- latitude ("lat") or longitude ("lon")
     """
     if ax == "lat":
         deg = 180
@@ -177,7 +177,7 @@ def get_cloudmask(mask_path):
 
 def binary_cloudmask(clouds):
     """
-    Takes an array of cloud mask probabilities and returns a binary classification
+    Takes a numpy array of cloud mask probabilities and returns a binary classification
     """
     cloudmask = clouds.copy()
     cloudmask[cloudmask < 0.5] = 0
@@ -347,7 +347,7 @@ def get_cloudmask_train(img_path):
     return cloudmask_path
 
 
-def get_cloudmask_predicted(img_path):
+def get_cloudmask_computed(img_path):
     """
     Retrieves the cloudmask for a given photo located in the directory structure below. Cloudmasks from this ML model should satisfy this structure:
 
