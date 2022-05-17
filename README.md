@@ -11,7 +11,7 @@ Use Python >=3.9.0. Dependencies for this model are stored in [requirements.txt]
 - [save_cloud_model](save_cloud_model) contains the pretrained model's weights
 - [model.py](model.py) holds the model's architecture and loss function
 - [predict.ipynb](predict.ipynb) is a Jupyter Notebook that allows users to quickly create a cloud mask for a given MDGM image. Automatically applies smooth tiling processes. Can additionally create file directories of many predictions for larger jobs
-- [training.ipynb](training.ipynb) contains all the necessary elements to train the cloudMask model
+- [training.ipynb](training.ipynb) contains all the necessary elements to train the cloudmask model
 - [preprocessing_training_data.ipynb](preprocessing_training_data.ipynb) performs preprocessing and data augmentation on the training data. You must preprocess the training data before using "training.ipynb"
 - [utils.py](utils.py) contains a collection of useful functions for other files in this repo
 - [view_masks.ipynb](view_masks.ipynb) has a few handy methods to plot cloud masks and MDGMs
