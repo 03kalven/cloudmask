@@ -1,7 +1,8 @@
 # cloudmask
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6926898.svg)](https://doi.org/10.5281/zenodo.6926898)
 
 ## Overview
-This repository contains all the code to train and use the cloudmask model. This cloudmask model identifies water-ice clouds in Mars Daily Global Maps. 
+This repository contains all the code to train and use the cloudmask model. This cloudmask model identifies water-ice clouds in Mars Daily Global Maps. If you would like the cloud mask dataset, you can access it [here](https://doi.org/10.5281/zenodo.6926898).
 
 ### Dependencies:
 Use Python >=3.9.0. Dependencies for this model are stored in [requirements.txt](requirements.txt).

@@ -1,5 +1,5 @@
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 from netCDF4 import Dataset
 import pandas as pd
 import os
@@ -165,23 +165,20 @@ def get_cloudmask_bounds(clouds):
     return (top, bottom)
 
 
-def get_cloudmask(mask_path):
+def get_cloudmask(mask_path, threshold=0.912):
     """
-    Takes a .ncdf cloudmask path and returns its values in a 2D numpy array
+    Takes a .ncdf cloudmask path and returns its values in a 2D numpy array.
+
+    Parameters:
+    mask_path -- Path to the desired cloudmask
+    threshold -- Value to determine binary classification. If set to None, mask will contain the raw probabilities
     """
     cloudmask_ncdf = Dataset(mask_path)
     cloudmask = cloudmask_ncdf.variables["cloudmask"][:, :]
     cloudmask = np.flip(cloudmask, axis=0)
-    return cloudmask
-
-
-def binary_cloudmask(clouds):
-    """
-    Takes a numpy array of cloud mask probabilities and returns a binary classification
-    """
-    cloudmask = clouds.copy()
-    cloudmask[cloudmask < 0.5] = 0
-    cloudmask[cloudmask >= 0.5] = 1
+    if threshold:
+        cloudmask[cloudmask >= threshold] = 1
+        cloudmask[(cloudmask < threshold) & (cloudmask > 0)] = 0
     return cloudmask
 
 
@@ -212,6 +209,35 @@ def get_black_bounds(img, sides=""):
         # crop right
         xmax = temp.shape[0] - (1 + np.argmax(temp[::-1]))
     return (xmin, xmax)
+
+
+def get_black_bounds_vertical(img, sides=""):
+    """
+    Returns the first left and right bounds of an MDGM that are NOT entirely black. Uses 30 as a threshold for black pixel values instead of 0 in case of JPEG compression.
+
+    Parameters:
+    img -- PIL image of the RGB MDGM
+    sides -- 't' if want to crop top bound, 'b' if want to crop bottom bound, 'tb' if want to crop both, '' if want to crop neither (default '')
+    """
+    xsize, ysize = img.size
+
+    ymin, ymax = 0, ysize
+
+    np_img = np.array(img)
+    filtered_img = np.zeros((ysize, xsize))
+    filter = (np_img[..., 0] < 30) | (np_img[..., 1] < 30) | (np_img[..., 2] < 30)
+    filtered_img[np.invert(filter)] = 1
+
+    temp = np.sum(filtered_img, axis=1)
+    temp[temp >= 1] = 1
+
+    if "t" in sides:
+        # crop left
+        ymin = np.argmax(temp)
+    if "b" in sides:
+        # crop right
+        ymax = temp.shape[0] - (1 + np.argmax(temp[::-1]))
+    return (ymin, ymax)
 
 
 def get_info_train(img_path):
@@ -392,13 +418,32 @@ def pad_mdgm(mdgm, xhigh, xlow, yhigh, ylow):
     padded_mdgm = Image.new("RGB", (croppedw + 2 * 92, croppedh))
 
     (fullw, fullh) = padded_mdgm.size
+    # right
     padded_mdgm.paste(
         cropped_mdgm.crop((croppedw - 92, 0, croppedw, fullh)), (0, 0, 92, fullh)
     )
+    # main
     padded_mdgm.paste(cropped_mdgm, (92, 0, croppedw + 92, fullh))
+    # left
     padded_mdgm.paste(
         cropped_mdgm.crop((0, 0, 92, fullh)), (fullw - 92, 0, fullw, fullh)
     )
+    # top
+    if ylow - 92 < 0:
+        extra_flip = abs(ylow - 92) + 1
+        padded_mdgm.paste(
+            ImageOps.flip(padded_mdgm.crop((0, 92, fullw, 92 + extra_flip))),
+            (0, 0, fullw, extra_flip),
+        )
+    # bottom
+    if yhigh + 93 > mdgm.size[1]:
+        extra_flip = abs(yhigh + 93 - mdgm.size[1]) + 1
+        padded_mdgm.paste(
+            ImageOps.flip(
+                padded_mdgm.crop((0, fullh - 92 - extra_flip, fullw, fullh - 92))
+            ),
+            (0, fullh - extra_flip, fullw, fullh),
+        )
 
     return padded_mdgm
 
