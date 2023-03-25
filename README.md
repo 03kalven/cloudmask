@@ -46,7 +46,7 @@ B
 This format should be satisfied if you are downloading MDGMs directly from [here](https://doi.org/10.7910/DVN/U3766S). The folder should contain one or more years of data.
 
 ## Training the model
-The model has already been trained, with an accuracy of about 97%. However, if you desire you may train the model yourself. Training data for this model is generated from the cloud masks by [Wang and González Abad [2021]](https://doi.org/10.3390/geosciences11080324). The data should be stored in [data/train](data/train).
+The model has already been trained, with an accuracy of about 98%. However, if you desire you may train the model yourself. Training data for this model is generated from the cloud masks by [Wang and González Abad [2021]](https://doi.org/10.3390/geosciences11080324). The data should be stored in [data/train](data/train).
 
 Before training, the downloaded MDGMs and cloud masks must pre preprocessed via [preprocessing_training_data.ipynb](preprocessing_training_data.ipynb). Run the cells in the notebook. The folder [data/train_processed](data/train_processed) should now contain subdivided MDGMs and cloud masks.
 
